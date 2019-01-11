@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客</title>
+    <link rel="stylesheet" type="text/css" href="{{static_url('css/blog.css')}}">
+    <script src="{{static_url('js/jquery-3.2.1.js')}}"></script>
+</head>
+<body>
+{%for blog in blogs%}
+    <ul>
+        <table class="tb">
+            <tr>
+                <td rowspan="4" class="title">
+                    <table>
+                            <tr>
+                                <td class="image">
+                                    <image {%if blog['avatar']%}
+                                             src="{{static_url('images/'+blog['avatar'])}}"
+                                             {%else%}
+                                             src="static/images/default_avatar.png"
+                                             {%end%}>
+                                    </image>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="id"><p>{{blog['author']}}</p></td>
+                            </tr>
+                    </table>
+                </td>
+                <td>{{blog['title']}}</td>
+            </tr>
+            <tr>
+                <td>{{' '.join(blog['tag'])}}</td>
+            </tr>
+            <tr>
+                <td  class="content"><p>{{blog['content']}}</p></td>
+            </tr>
+            <tr>
+                <td>评论数:{{blog['comment']}}</td>
+            </tr>
+        </table>
+    </ul>
+{%end%}
+</body>
+</html>

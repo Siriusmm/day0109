@@ -1,0 +1,43 @@
+ul{
+    list-style-type: none;
+    margin-left:150px;
+}
+.tb{
+    width: 900px;
+    border: 1px solid #ccc;
+}
+.tb td{
+    border: 1px solid #ccc;
+}
+.tb table{
+    margin: 10px 5px;
+    width: 100%;
+    height: 100%;
+}
+.title{
+    width: 20%;
+}
+.content{
+    min-height: 150px;
+}
+.content p{
+    margin: 0 auto;
+}
+.image{
+    margin: 0px auto;
+}
+image{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+
+}
+.id p{
+    text-align: center;
+    margin:0px;
+    padding:1px;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
