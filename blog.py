@@ -1,4 +1,5 @@
 import tornado
+import pymysql
 from tornado import options
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -22,11 +23,69 @@ class LoginHandler(RequestHandler):
         name = self.get_argument('name', '')
         password = self.get_argument('password', '')
         result=''
-        if name == 'abc' and password == '123':
+        connect = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='123456', database='blogdb')
+        cursor = connect.cursor()
+        sql='select count(*) from tb_user where user_name=%s and user_password=%s'
+        t=(name,password)
+        print(t)
+        try:
+            cursor.execute(sql,t)
+            data = cursor.fetchone()[0]
+        except Exception as err:
+            print(err)
+        cursor.close()
+        print(data)
+        if data:
             self.redirect('/blog')
         else:
             msg = '用户名或密码错误'
             self.render('login.html',result=msg)
+
+class RegisterHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        self.render('register.html',result='')
+
+    def post(self, *args, **kwargs):
+        name=self.get_body_argument('name',None)
+        password=self.get_body_argument('password',None)
+        rpassword=self.get_body_argument('rpassword',None)
+        city=self.get_body_argument('city',None)
+        files=self.request.files
+        avatar=files.get("avatar")
+        if avatar:
+            data=avatar[0].get('body')
+            avatar_path='upload/avatar/'+name+'.jpg'
+            with open(avatar_path,'wb') as f:
+                f.write(data)
+        else:
+            avatar_path=None
+        if name and password:
+            connect=pymysql.connect(host='127.0.0.1',port=3306,user='root',password='123456',database='blogdb')
+            cursor=connect.cursor()
+            sql="select count(*) from tb_user where user_name=%s"
+            t=(name,)
+            try:
+                cursor.execute(sql,t)
+                db=cursor.fetchone()[0]
+            except Exception as err:
+                print(err)
+            if db:
+                msg='用户名已被占用'
+                self.render('register.html',result=msg)
+            else:
+                sql="insert into tb_user(user_name,user_password,user_avatar,user_city) VALUES (%s,%s,%s,%s)"
+                t=(name,password,avatar_path,city)
+                try:
+                    cursor.execute(sql,t)
+                    connect.commit()
+                    self.write('注册成功')
+                except Exception as err:
+                    print(err)
+            cursor.close()
+
+        else:
+            msg='用户名或密码不能为空'
+            self.render('register.html',result=msg)
 
 class BlogHandler(RequestHandler):
     def get(self, *args, **kwargs):
@@ -47,7 +106,10 @@ class BlogHandler(RequestHandler):
         pass
 
 
-app=Application([('/',IndexHandler),('/login',LoginHandler),('/blog',BlogHandler)],
+app=Application([('/',IndexHandler),
+                 ('/login/',LoginHandler),
+                 ('/register/',RegisterHandler),
+                 ('/blog',BlogHandler)],
                 static_path='mystatics',template_path='mytemplates')
 server=HTTPServer(app)
 server.listen(8000)
