@@ -56,7 +56,6 @@ class DButil:
         password=kwargs.get('password')
         pwd=mymd5(password)
         user_info=(username,pwd)
-        print(user_info)
         sql='select count(*) from tb_user where user_name=%s and user_password=%s'
         self.cursor.execute(sql,user_info)
         count=self.cursor.fetchone()[0]
