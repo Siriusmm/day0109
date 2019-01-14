@@ -42,10 +42,8 @@ class DButil:
         try:
             self.cursor.execute(sql, t)
             self.cursor.connection.commit()
-            self.cursor.close()
             return True
         except Exception as err:
-            self.cursor.close()
             print(err)
             return False
 
@@ -64,6 +62,11 @@ class DButil:
         else:
             return False
 
-
-
+    def search_user(self,username):
+        username=username
+        sql="select * from tb_user where user_name=%s"
+        user_info=(username,)
+        self.cursor.execute(sql,user_info)
+        user=self.cursor.fetchone()
+        return user
 
