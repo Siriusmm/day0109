@@ -9,12 +9,13 @@ from tornado.web import Application, RequestHandler
 from myapp.myapplication import MyApplication
 from myconfig.config import configs
 from myhandlers.myhandler import *
-from mymodulers.mymoduler import *
+from mymoduls.mymoduler import *
 
 app=MyApplication([('/',IndexHandler),
                  ('/login',LoginHandler),
                  ('/register',RegisterHandler),
-                 ('/blog',BlogHandler)],
+                 ('/blog',BlogHandler),
+                ('/check',CheckHandler)],
                  sp='mystatics',
                  tp='mytemplates',
                   um={'login_module':LoginModule,'register_module':RegisterModule,'blog_module':BlogModule})

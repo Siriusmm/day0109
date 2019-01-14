@@ -66,6 +66,19 @@ class RegisterHandler(RequestHandler):
             msg='用户名或密码不能为空'
             self.render('register.html',result=msg)
 
+class CheckHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        pass
+    def post(self, *args, **kwargs):
+        username=self.get_body_argument('username',None)
+        print(username)
+        result=self.application.dbutil.user_exist(username)
+        if result:
+            d=dict(msg='not_ok')
+        else:
+            d=dict(msg='ok')
+        self.write(d)
+
 class BlogHandler(RequestHandler):
     def get(self, *args, **kwargs):
         self.render('blog.html',blogs=[{'title':'第一篇博客',
