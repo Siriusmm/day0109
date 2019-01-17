@@ -5,8 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-{%for i in info_list%}
-<h1>{{i}}</h1>
-{%end%}
+<ul>
+
+    <li>{{info_list[1]}}</li>
+    <li>
+        <image src="{{static_url('images/avatar/'+info_list[3])}}"></image>
+
+    </li>
+    <li>{{info_list[4]}}</li>
+
+</ul>
 </body>
 </html>

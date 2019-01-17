@@ -47,7 +47,7 @@ class RegisterHandler(RequestHandler):
         avatar=files.get("avatar")
         if avatar:
             data=avatar[0].get('body')
-            avatar_path='mystatics/images/avatar/'+username+'.jpg'
+            avatar_path=username+'.jpg'
             with open(avatar_path,'wb') as f:
                 f.write(data)
         else:
@@ -87,13 +87,15 @@ class CheckHandler(RequestHandler):
 class BlogHandler(RequestHandler):
     def get(self, *args, **kwargs):
         username=self.get_cookie("username",'')
+        print(username)
         if username:
             dbutil=self.application.dbutil
+
             self.render('blog.html',blogs=[{'title':'第一篇博客',
                                 'tag':['情感','男女','星座'],
                                 'content':'好长好长好长的正文',
                                 'author':'某某人',
-                                'avatar':'a.jpg',
+                                'avatar':'ttt.jpg',
                                 'comment':45},
 
                                {'title':'第二篇博客',
@@ -109,10 +111,11 @@ class BlogHandler(RequestHandler):
 
 class UserHandler(RequestHandler):
     def get(self, *args, **kwargs):
-        dbutil=self.application.dbutil
-        print(args)
-        user=dbutil.search_user(args[0])
-        l=[]
-        for i in user:
-            l.append(i)
-        self.render('user.html',info_list=l)
+        username = self.get_cookie("username", '')
+        if username==args[0]:
+            dbutil=self.application.dbutil
+            user=dbutil.search_user(args[0])
+            l=list(user)
+            self.render('user.html',info_list=l)
+        else:
+            self.redirect('/login')
